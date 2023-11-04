@@ -5,7 +5,7 @@
   register: git_check
   changed_when: false
 
-- name: Install net-tools package
+- name: Install tree package
   become: yes
   command: apt install -y tree
   when: git_check.failed

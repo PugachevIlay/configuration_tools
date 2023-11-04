@@ -5,7 +5,7 @@
   register: net_tools_check
   changed_when: false
 
-- name: Uninstall net-tools package
+- name: Uninstall tree package
   become: yes
   command: apt remove -y tree
   when: net_tools_check.stdout is defined
