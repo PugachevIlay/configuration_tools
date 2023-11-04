@@ -1,0 +1,19 @@
+- name: Check if net-tools is installed
+  become: yes
+  command: tree --version
+  ignore_errors: yes
+  register: git_check
+  changed_when: false
+
+- name: Install net-tools package
+  become: yes
+  command: apt install -y tree
+  when: git_check.failed
+
+- name: Show git version
+  command: tree --version
+  register: status_output
+
+- name: Print version output
+  ansible.builtin.debug:
+    var: status_output.stdout_lines
