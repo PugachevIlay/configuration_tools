@@ -1,6 +1,6 @@
 - name: Check if git is installed
   become: yes
-  command: dpkg -l | grep git
+  command: git --version
   ignore_errors: yes
   register: git_check
   changed_when: false
