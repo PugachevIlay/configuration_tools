@@ -1,0 +1,19 @@
+- name: Check if net-tools is installed
+  become: yes
+  command: ifconfig --version && netstat --version && arp --version && route --version
+  ignore_errors: yes
+  register: net_tools_check
+  changed_when: false
+
+- name: Uninstall net-tools package
+  become: yes
+  command: apt remove -y net-tools
+  when: net_tools_check.stdout is defined
+
+- name: Show net-tools version
+  command: ifconfig --version && netstat --version && arp --version && route --version
+  register: status_output
+
+- name: Print version output
+  ansible.builtin.debug:
+    var: status_output.stdout_lines

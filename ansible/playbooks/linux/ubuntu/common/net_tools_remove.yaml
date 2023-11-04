@@ -1,0 +1,11 @@
+- hosts: all
+  vars:
+    ssh_user: developer
+
+  remote_user: "{{ ssh_user }}"
+
+  tasks:
+    - name: Include "net-tools" role for {{ ssh_user }} user
+      include_role:
+        name: common
+        tasks_from: net_tools_remove.yaml
