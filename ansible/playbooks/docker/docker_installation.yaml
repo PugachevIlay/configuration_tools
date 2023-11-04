@@ -1,0 +1,10 @@
+- hosts: all
+  vars:
+    ssh_user: developer
+
+  remote_user: "{{ ssh_user }}"
+
+  tasks:
+    - name:
+      include_role:
+        name: docker

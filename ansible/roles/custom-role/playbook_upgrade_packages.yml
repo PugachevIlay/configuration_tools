@@ -1,0 +1,10 @@
+---
+- name: Upgrade all apt packages on remote server
+  hosts: all
+  remote_user: root
+  become: true
+
+  tasks:
+  - name: Upgrade all apt packages
+    apt:
+      update_cache: yes

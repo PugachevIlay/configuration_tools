@@ -1,0 +1,10 @@
+---
+- name: Playbook debug vault password
+  hosts: all
+  tasks:
+    - name: include vault
+      ansible.builtin.include_vars:
+        file: /home/ansible-agent/ansible/group_vars/vault.yml
+    - name: print variable
+      ansible.builtin.debug:
+        var: developer_user_password

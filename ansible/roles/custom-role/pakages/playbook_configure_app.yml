@@ -1,0 +1,136 @@
+---
+- name: Configure APP
+  hosts: all
+  become: yes
+
+  vars:
+    user: admin
+    app_name: "node_exporter"
+    unit_file: "{{ app_name }}.service"
+    process_name: "{{ app_name }}_process"
+    node_exporter_version: "1.6.0"
+    node_exporter_url: "https://github.com/prometheus/{{ app_name }}/releases/download/v{{ node_exporter_version }}/{{ app_name }}-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    app_path: "/app"
+    node_exporter_path: "{{ app_path }}/{{ app_name }}/"
+    systemd_dir: "/home/{{ user }}/.config/systemd/user/"
+
+  remote_user: "{{ user }}"
+
+  tasks:
+    - name: Create directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "{{ item_mode | defaults('0755') }}"
+      loop:
+        - "{{ app_path }}"
+        - "{{ node_exporter_path }}"
+        - "{{ systemd_dir }}"
+      vars:
+        item_mode: "774"
+
+    - name: Download Node Exporter
+      ansible.builtin.get_url:
+        url: "{{ node_exporter_url }}"
+        dest: "{{ app_path }}"
+        mode: "0774"
+      tags: [ 'download' ]
+
+    - name: Extract Node Exporter
+      ansible.builtin.unarchive:
+        src: "{{ app_path }}/{{ app_name }}-{{ node_exporter_version }}.ubuntu-amd64.tar.gz"
+        dest: "{{ app_path }}"
+        remote_src: yes
+        owner: "{{ user }}"
+        group: "{{ user }}"
+      tags: [ 'extract' ]
+
+    - name: Check if {{ app_name }} process is running
+      ansible.builtin.shell: pgrep -f {{ app_name }}
+      register: process_name
+      ignore_errors: true
+
+    - name: Check if the unit file exists
+      ansible.builtin.stat:
+        path: "{{ systemd_dir }}/{{ unit_file }}"
+      register: systemd_unit_file
+
+    - name: Stop systemd user service if node_exporter process is running
+      ansible.builtin.command: systemctl --user stop {{ unit_file }}
+      become_user: "{{ user }}"
+      when:
+        - systemd_unit_file.stat.exists
+        - process_name.stdout | length > 0
+      tags: [ 'stop' ]
+
+
+    - name: Debug systemd_unit_file
+      ansible.builtin.debug:
+        var: systemd_unit_file
+
+    - name: Copy Node Exporter binary to the correct location
+      ansible.builtin.copy:
+        src: "{{ app_path }}/{{ app_name }}-{{ node_exporter_version }}.ubuntu-amd64/"
+        dest: "{{ node_exporter_path }}"
+        remote_src: yes
+        owner: "{{ user }}"
+        group: "{{ user }}"
+      tags: [ 'copy' ]
+
+    - name: Create systemd service for Node Exporter
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=Node Exporter
+          After=network.target
+
+          [Service]
+          ExecStart={{ node_exporter_path }}{{ app_name }}
+
+          [Install]
+          WantedBy=default.target
+        dest: "{{ systemd_dir }}/{{ unit_file }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0644'
+      tags: [ 'systemd' ]
+
+    - name: Enable linger for the user
+      ansible.builtin.command: loginctl enable-linger {{ user }}
+      become_user: "{{ user }}"
+      tags: [ 'linger' ]
+
+    - name: Daemon reload for the user
+      ansible.builtin.command: systemctl --user daemon-reload
+      become_user: "{{ user }}"
+      tags: [ 'daemon-reload' ]
+
+    - name: Start systemd user service
+      ansible.builtin.command: systemctl --user restart {{ unit_file }}
+      become_user: "{{ user }}"
+      tags: [ 'restart' ]
+
+    - name: Get status user service
+      ansible.builtin.command: systemctl --user status {{ unit_file }}
+      become_user: "{{ user }}"
+      register: status_output
+      tags: [ 'status' ]
+
+    - name: Print status output
+      ansible.builtin.debug:
+        var: status_output.stdout_lines
+      tags: [ 'status' ]
+
+    - name: Enabled user service
+      ansible.builtin.command: systemctl --user enable {{ unit_file }}
+      become_user: "{{ user }}"
+      tags: [ 'enabled' ]
+
+    - name: Remove old files
+      ansible.builtin.command:
+        cmd: "rm -rf /app/{{ app_name }}-*"
+        warn: false
+      become_user: "{{ user }}"
+      tags: [ 'remove' ]

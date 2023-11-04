@@ -1,0 +1,18 @@
+- name: Create SSH directory if not exists
+  file:
+    path: /{{ user }}/.ssh
+    state: directory
+    mode: '0700'
+
+- name: Copy public keys to authorized_keys
+  ansible.posix.authorized_key:
+    user: "{{ user }}"
+    state: present
+    key: '{{ item }}'
+  with_file: "{{ authorized_keys }}"
+
+- name: Configuring sudo access without a password for the {{ user }} user
+  lineinfile:
+    dest: "/etc/sudoers"
+    line: "{{ user }} ALL=(ALL) NOPASSWD:ALL"
+    validate: "visudo -cf %s"

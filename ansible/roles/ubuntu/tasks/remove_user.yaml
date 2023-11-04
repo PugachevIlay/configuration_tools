@@ -1,0 +1,23 @@
+- name: Stop and disable any services owned by the {{ user }} user
+  ansible.builtin.shell: "systemctl --user --all | grep -w '{{ user }}' | awk '{print $1}' | xargs -I {} systemctl --user stop {} && systemctl --user disable {} || true"
+  ignore_errors: yes
+
+- name: Stop processes owned by the {{ user }} user
+  ansible.builtin.shell: "pkill -u {{ user }}"
+  ignore_errors: yes
+
+- name: Remove the {{ user }}'s systemd files
+  ansible.builtin.file:
+    path: "/home/{{ user }}/.config/systemd/user/"
+    state: absent
+
+- name: Delete the {{ user }} user
+  ansible.builtin.user:
+    name: "{{ user }}"
+    state: absent
+    remove: yes
+
+- name: Remove {{ user }}'s home directory
+  ansible.builtin.file:
+    path: "/home/{{ user }}"
+    state: absent

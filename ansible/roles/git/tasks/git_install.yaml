@@ -1,0 +1,16 @@
+---
+- name: Update package cache
+  become: yes
+  command: apt update
+
+- name: Install git package
+  become: yes
+  command: apt install -y git
+
+- name: Show git version
+  command: git --version
+  register: status_output
+
+- name: Print version output
+  ansible.builtin.debug:
+    var: status_output.stdout_lines

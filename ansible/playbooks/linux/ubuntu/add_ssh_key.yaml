@@ -1,0 +1,10 @@
+- hosts: all
+  vars:
+    user: root
+
+  remote_user: "{{ user }}"
+
+  tasks:
+    - name:
+      include_role:
+        name: ubuntu

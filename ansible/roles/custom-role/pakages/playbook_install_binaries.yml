@@ -1,0 +1,86 @@
+---
+- name: Create user on remote server
+  hosts: all
+
+  become: yes
+
+  vars:
+    user: developer
+    source_user: developer
+
+  remote_user: "{{ source_user }}"
+
+  tasks:
+    - name: Create binaries directory
+      file:
+        path: "/binaries/node_exporter/"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0770'
+
+    - name: Права рекурсивно на папку developer
+      ansible.builtin.command: chmod -R 775 /binaries
+
+    - name: Create binaries directory
+      file:
+        path: "/home/{{user}}/.config/systemd/user/"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
+    - name: Скачать архив Node Exporter
+      ansible.builtin.get_url:
+        url: "https://github.com/prometheus/node_exporter/releases/download/v1.0.0/node_exporter-1.0.0.linux-amd64.tar.gz"
+        dest: "/binaries/"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0777'
+
+    - unarchive:
+        src: "/binaries/node_exporter-1.0.0.ubuntu-amd64.tar.gz"
+        dest: "/binaries/"
+        remote_src: yes
+        owner: "{{ user }}"
+        group: "{{ user }}"
+
+    - name: Копирование бинаря в папку
+      copy:
+        src: "/binaries/node_exporter-1.0.0.ubuntu-amd64/"
+        dest: "/binaries/node_exporter/"
+        remote_src: yes
+        owner: "{{ user }}"
+        group: "{{ user }}"
+
+
+
+    - name: Создать systemd-службу для Node Exporter
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=Node Exporter
+          After=network.target
+
+          [Service]
+          ExecStart=/binaries/node_exporter/node_exporter
+
+          [Install]
+          WantedBy=default.target
+        dest: "/home/{{user}}/.config/systemd/user/node_exporter.service"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0644'
+
+    - name: Выполнить команду loginctl enable-linger для пользователя developer
+      ansible.builtin.command: loginctl enable-linger developer
+
+    - name: Reload systemd --user
+      command: systemctl --user daemon-reload
+      become: yes
+      become_user: "{{ user }}"
+
+    - name: Reload systemd --user
+      command: systemctl --user start node_exporter.service
+      become: yes
+      become_user: "{{ user }}"

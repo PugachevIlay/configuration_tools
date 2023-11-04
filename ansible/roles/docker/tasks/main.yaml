@@ -1,0 +1,15 @@
+- import_tasks: apt_update.yaml
+
+- import_tasks: install_packages.yaml
+
+- import_tasks: add_docker_gpg_files.yaml
+
+- import_tasks: set_up_docker_repo.yaml
+
+- import_tasks: apt_update.yaml
+
+- import_tasks: install_docker_packages.yaml
+
+- import_tasks: add_to_docker_group.yaml
+
+- import_tasks: get_docker_version.yaml

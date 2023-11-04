@@ -1,0 +1,18 @@
+- hosts: all
+  vars:
+    ssh_user: root
+    user: developer
+  remote_user: "{{ ssh_user }}"
+
+  tasks:
+    # Decrypt Vault file and load variables
+    - name: Load user credentials configuration from Vault
+      include_vars:
+        file: ~/ansible/vault/users/cfg_users.yaml
+
+    - name: Include user-setup role for {{ user }} user
+      include_role:
+        name: ubuntu
+        tasks_from: create_develop_user.yaml
+      vars:
+        user_password: "{{ users[user].password }}"

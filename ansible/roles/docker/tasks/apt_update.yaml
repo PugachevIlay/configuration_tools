@@ -1,0 +1,3 @@
+- name: Update `apt` package index
+  become: yes
+  command: sudo apt update

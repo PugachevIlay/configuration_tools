@@ -1,0 +1,7 @@
+ssh_user: root
+conf_user: ansible
+dev_user: developer
+view_user: viewer
+cred_path: ~/ansible/vault/users/cfg_users.yaml
+
+docker_compose_version: v2.23.0

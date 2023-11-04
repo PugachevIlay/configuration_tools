@@ -1,0 +1,5 @@
+- import_tasks: add_ssh_key.yaml
+
+- import_tasks: disable_password_auth.yaml
+
+#- import_tasks: enable_password_auth.yaml

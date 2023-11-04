@@ -1,0 +1,13 @@
+- hosts: all
+  vars:
+    ssh_user: root
+    user: developer
+  remote_user: "{{ ssh_user }}"
+
+  tasks:
+    - name: Remove {{ user }} user
+      include_role:
+        name: ubuntu
+        tasks_from: remove_user.yaml
+      vars:
+        user_password: "{{ users[user].password }}"

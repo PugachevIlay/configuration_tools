@@ -1,0 +1,9 @@
+- name: Install packages to allow `apt` to use a repository over HTTPS
+  become: yes
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - apt-transport-https
+    state: present

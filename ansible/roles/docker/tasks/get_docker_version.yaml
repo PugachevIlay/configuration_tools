@@ -1,0 +1,9 @@
+- name: Get installed Docker package versions
+  become: yes
+  shell: dpkg -l | grep "docker"
+  register: installed_docker_packages
+  changed_when: false
+
+- name: Display installed Docker package versions
+  debug:
+    var: installed_docker_packages.stdout_lines
