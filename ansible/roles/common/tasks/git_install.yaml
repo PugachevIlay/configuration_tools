@@ -1,0 +1,19 @@
+- name: Check if git is installed
+  become: yes
+  command: dpkg -l | grep git
+  ignore_errors: yes
+  register: git_check
+  changed_when: false
+
+- name: Install git package
+  become: yes
+  command: apt install -y git
+  when: git_check.failed
+
+- name: Show git version
+  command: git --version
+  register: status_output
+
+- name: Print version output
+  ansible.builtin.debug:
+    var: status_output.stdout_lines

@@ -1,0 +1,24 @@
+- name: Check if git is installed
+  become: yes
+  command: dpkg -l | grep git
+  ignore_errors: yes
+  register: git_check
+  changed_when: false
+
+- name: Uninstall git package
+  become: yes
+  command: apt remove -y git
+  when: git_check.stdout is defined
+
+- name: Delete git configuration settings
+  become: yes
+  command: apt purge -y git
+  when: git_check.stdout is defined
+
+- name: Show git version
+  command: git --version
+  register: status_output
+
+- name: Print version output
+  ansible.builtin.debug:
+    var: status_output.stdout_lines
