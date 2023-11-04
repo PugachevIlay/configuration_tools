@@ -18,7 +18,9 @@
 - name: Show git version
   command: git --version
   register: status_output
+  when: git_check.stdout is defined
 
 - name: Print version output
   ansible.builtin.debug:
     var: status_output.stdout_lines
+  when: git_check.stdout is defined
