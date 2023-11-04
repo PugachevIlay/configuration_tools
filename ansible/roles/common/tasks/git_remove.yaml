@@ -1,21 +1,21 @@
-- name: Check if git is installed
+- name: Check if {{ package_name }} is installed
   become: yes
   command: git --version
   ignore_errors: yes
   register: git_check
   changed_when: false
 
-- name: Uninstall git package
+- name: Uninstall {{ package_name }} package
   become: yes
   command: apt remove -y git
   when: git_check.stdout is defined
 
-- name: Delete git configuration settings
+- name: Delete {{ package_name }} configuration settings
   become: yes
   command: apt purge -y git
   when: git_check.stdout is defined
 
-- name: Show git version
+- name: Show {{ package_name }} version
   command: git --version
   register: status_output
   when: git_check.stdout is defined

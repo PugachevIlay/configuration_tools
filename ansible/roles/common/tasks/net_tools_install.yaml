@@ -1,16 +1,16 @@
-- name: Check if net-tools is installed
+- name: Check if {{ package_name }} is installed
   become: yes
   command: ifconfig --version && netstat --version && arp --version && route --version
   ignore_errors: yes
   register: git_check
   changed_when: false
 
-- name: Install net-tools package
+- name: Install {{ package_name }} package
   become: yes
   command: apt install -y net-tools
   when: git_check.failed
 
-- name: Show git version
+- name: Show {{ package_name }} version
   command: ifconfig --version && netstat --version && arp --version && route --version
   register: status_output
   when: git_check.failed

@@ -1,16 +1,16 @@
-- name: Check if net-tools is installed
+- name: Check if {{ package_name }} is installed
   become: yes
   command: tree --version
   ignore_errors: yes
   register: git_check
   changed_when: false
 
-- name: Install tree package
+- name: Install {{ package_name }} package
   become: yes
   command: apt install -y tree
   when: git_check.failed
 
-- name: Show git version
+- name: Show {{ package_name }} version
   command: tree --version
   register: status_output
   when: git_check.failed

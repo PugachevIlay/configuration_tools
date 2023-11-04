@@ -1,16 +1,16 @@
-- name: Check if net-tools is installed
+- name: Check if {{ package_name }} is installed
   become: yes
   command: tree --version
   ignore_errors: yes
   register: net_tools_check
   changed_when: false
 
-- name: Uninstall tree package
+- name: Uninstall {{ package_name }} package
   become: yes
   command: apt remove -y tree
   when: net_tools_check.stdout is defined
 
-- name: Show net-tools version
+- name: Show {{ package_name }} version
   command: tree --version
   register: status_output
   when: net_tools_check.stdout is defined

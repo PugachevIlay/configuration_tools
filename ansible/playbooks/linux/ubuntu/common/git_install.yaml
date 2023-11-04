@@ -1,11 +1,11 @@
 - hosts: all
   vars:
     ssh_user: developer
-
+    package_name: git
   remote_user: "{{ ssh_user }}"
 
   tasks:
-    - name: Include "git_install" role for {{ ssh_user }} user
+    - name: Include {{ package_name }} role for {{ ssh_user }} user
       include_role:
         name: common
         tasks_from: git_install.yaml
