@@ -1,7 +1,7 @@
 - hosts: all
   become: yes
   vars:
-    ssh_user: admin
+    ssh_user: root
     config_user: ansible
     dev_user: developer
 
