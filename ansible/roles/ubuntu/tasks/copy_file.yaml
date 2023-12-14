@@ -1,0 +1,22 @@
+---
+- name: Transfer file from Server1 to Server2
+  hosts: {{source_host}}
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Fetch file from Server1
+      fetch:
+        src: "~/test_copy/{{file_name}}"
+        dest: "~/{{file_name}}"
+
+- name: Transfer file from local machine to Server2
+  hosts: {{destination_host}}
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Copy file to Server2
+      copy:
+        src: "~/{{file_name}}"
+        dest: "~/test_copy2/{{file_name}}"

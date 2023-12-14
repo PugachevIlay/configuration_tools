@@ -1,0 +1,13 @@
+- hosts: all
+  vars:
+    ssh_user: developer
+    source_host: 212.193.51.44
+    destination_host: 212.193.51.44
+    file_name: test.txt
+  remote_user: "{{ ssh_user }}"
+
+  tasks:
+    - name: Copy role for {{ ssh_user }} user
+      include_role:
+        name: ubuntu
+        tasks_from: copy_file.yaml
