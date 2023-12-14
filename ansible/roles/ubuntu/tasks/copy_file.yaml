@@ -1,4 +1,3 @@
----
 - name: Transfer file from Server1 to Server2
   hosts: {{source_host}}
   gather_facts: true
