@@ -6,5 +6,5 @@
   tasks:
     - name: Create file
       file:
-        path: "~/test_file.txt"
+        path: "{{ ansible_env.HOME }}/example.txt"
         state: touch
