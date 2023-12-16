@@ -6,5 +6,5 @@
   tasks:
     - name: create_file_example.txt
       file:
-        path: ~/exampl.txt
+        path: "~/exampl.txt"
         state: touch
