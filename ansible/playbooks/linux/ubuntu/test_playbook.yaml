@@ -4,7 +4,7 @@
   become: yes
   remote_user: developer
   tasks:
-    - name: create_file_example.txt
+    - name: Create file
       file:
-        path: "~/exampl.txt"
+        path: "~/test_file.txt"
         state: touch
