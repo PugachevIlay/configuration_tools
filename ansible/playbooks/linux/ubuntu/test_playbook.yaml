@@ -1,0 +1,10 @@
+---
+- name: creat_file_admin
+  hosts: all
+  become: yes
+  remote_user: developer
+  tasks:
+    - name: create_file_example.txt
+      file:
+        path: ~/exampl.txt
+        state: touch
