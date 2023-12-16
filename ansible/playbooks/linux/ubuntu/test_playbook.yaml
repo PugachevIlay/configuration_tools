@@ -1,5 +1,5 @@
 ---
-- name: creat_file_admin
+- name: Crate file
   hosts: all
   become: yes
   remote_user: developer
