@@ -30,10 +30,17 @@
     group: "{{ user }}"
     mode: 0700
 
-- name: Copy authorized keys for the {{ user }} user from local {{ ssh_user }} user
-  copy:
-    src: ~/.ssh/authorized_keys
-    dest: /home/{{ user }}/.ssh/authorized_keys
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    mode: 0600
+#- name: Copy authorized keys for the {{ user }} user from local {{ ssh_user }} user
+#  copy:
+#    src: ~/.ssh/authorized_keys
+#    dest: /home/{{ user }}/.ssh/authorized_keys
+#    owner: "{{ user }}"
+#    group: "{{ user }}"
+#    mode: 0600
+
+- name: Copy public keys to authorized_keys
+  ansible.posix.authorized_key:
+    user: "{{ user }}"
+    state: present
+    key: '{{ item }}'
+  with_file: "{{ authorized_keys }}"

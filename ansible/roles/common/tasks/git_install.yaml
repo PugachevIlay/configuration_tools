@@ -1,0 +1,21 @@
+- name: Check if {{ package_name }} is installed
+  become: yes
+  command: git --version
+  ignore_errors: yes
+  register: git_check
+  changed_when: false
+
+- name: Install {{ package_name }} package
+  become: yes
+  command: apt install -y git
+  when: git_check.failed
+
+- name: Show {{ package_name }} version
+  command: git --version
+  register: status_output
+  when: git_check.failed
+
+- name: Print version output
+  ansible.builtin.debug:
+    var: status_output.stdout_lines
+  when: git_check.failed

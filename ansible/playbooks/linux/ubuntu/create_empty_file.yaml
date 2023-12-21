@@ -1,0 +1,12 @@
+- hosts: all
+  vars:
+    user: developer
+    file_name: test_file.txt
+    file_path: ~/
+  remote_user: "{{ user }}"
+
+  tasks:
+    - name:
+      include_role:
+        name: ubuntu
+        tasks_from: create_file.yaml

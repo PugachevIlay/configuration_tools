@@ -1,0 +1,21 @@
+- name: Installation Kubectl
+  become: yes
+  command: "curl -LO https://dl.k8s.io/release/v{{kubectl_version}}/bin/linux/amd64/kubectl"
+
+- name: Add execution permission for Kubectl binary
+  become: yes
+  command: chmod +x ./kubectl
+
+- name: Move Kubectl binary to /usr/local/bin/
+  become: yes
+  command: sudo mv ./kubectl /usr/local/bin/kubectl
+
+- name: Get installed Kubectl binary version
+  become: yes
+  command: kubectl version --client
+  register: kubectl_version
+  changed_when: false
+
+- name: Display installed Kubectl binary version
+  debug:
+    var: kubectl_version.stdout_lines

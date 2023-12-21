@@ -1,0 +1,4 @@
+- name: Create empty {{file_path}}{{file_name}}
+  file:
+    path: "{{file_path}}{{file_name}}"
+    state: touch

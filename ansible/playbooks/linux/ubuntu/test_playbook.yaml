@@ -1,0 +1,10 @@
+---
+- name: Crate file
+  hosts: all
+  become: yes
+  remote_user: developer
+  tasks:
+    - name: Create file
+      file:
+        path: "/home/ansible/example.txt"
+        state: touch

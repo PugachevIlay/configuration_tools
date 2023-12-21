@@ -1,0 +1,21 @@
+- name: Installation Minikube
+  become: yes
+  command: "curl -Lo minikube https://storage.googleapis.com/minikube/releases/v{{minikube_version}}/minikube-linux-amd64"
+
+- name: Add execution permission for Minikube binary
+  become: yes
+  command: chmod +x minikube
+
+- name: Add Minikube binary to /usr/local/bin/ for all users
+  become: yes
+  command: sudo install minikube /usr/local/bin/
+
+- name: Get installed Minikube binary version
+  become: yes
+  command: minikube version
+  register: minikube_version
+  changed_when: false
+
+- name: Display installed Minikube binary version
+  debug:
+    var: minikube_version.stdout_lines

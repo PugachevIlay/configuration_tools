@@ -1,0 +1,11 @@
+- hosts: all
+  vars:
+    ssh_user: developer
+    kubectl_version: 1.28.3
+  remote_user: "{{ ssh_user }}"
+
+  tasks:
+    - name: Include Kubectl v{{ kubectl_version }} role for {{ ssh_user }} user
+      include_role:
+        name: kubernetes
+        tasks_from: install_kubectl.yaml

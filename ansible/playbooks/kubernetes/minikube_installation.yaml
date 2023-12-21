@@ -1,0 +1,11 @@
+- hosts: all
+  vars:
+    ssh_user: developer
+    minikube_version: 1.32.0
+  remote_user: "{{ ssh_user }}"
+
+  tasks:
+    - name: Include Minikube v{{ minikube_version }} role for {{ ssh_user }} user
+      include_role:
+        name: kubernetes
+        tasks_from: install_minikube.yaml

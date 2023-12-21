@@ -1,0 +1,11 @@
+- hosts: all
+  vars:
+    ssh_user: developer
+    package_name: tree
+  remote_user: "{{ ssh_user }}"
+
+  tasks:
+    - name: Include {{ package_name }} role for {{ ssh_user }} user
+      include_role:
+        name: common
+        tasks_from: tree_install.yaml

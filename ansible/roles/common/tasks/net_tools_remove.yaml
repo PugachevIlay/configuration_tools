@@ -1,0 +1,21 @@
+- name: Check if {{ package_name }}is installed
+  become: yes
+  command: ifconfig --version && netstat --version && arp --version && route --version
+  ignore_errors: yes
+  register: net_tools_check
+  changed_when: false
+
+- name: Uninstall {{ package_name }} package
+  become: yes
+  command: apt remove -y net-tools
+  when: net_tools_check.stdout is defined
+
+- name: Show {{ package_name }} version
+  command: ifconfig --version && netstat --version && arp --version && route --version
+  register: status_output
+  when: net_tools_check.stdout is defined
+
+- name: Print version output
+  ansible.builtin.debug:
+    var: status_output.stdout_lines
+  when: net_tools_check.stdout is defined
