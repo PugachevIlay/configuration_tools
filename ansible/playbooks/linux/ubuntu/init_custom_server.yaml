@@ -2,7 +2,7 @@
   become: yes
   vars:
     ssh_user: root
-    config_user: ubuntu
+    config_user: admin
 
   remote_user: "{{ ssh_user }}"
 
