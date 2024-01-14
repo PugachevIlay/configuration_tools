@@ -2,7 +2,7 @@
   become: yes
   vars:
     ssh_user: root
-    dev_user: developer
+    config_user: ubuntu
 
   remote_user: "{{ ssh_user }}"
 
@@ -18,10 +18,10 @@
       vars:
         user: "{{ ssh_user }}"
 
-    - name: Include user-setup role for {{ dev_user }} user
+    - name: Include user-setup role for {{ config_user }} user
       include_role:
         name: ubuntu
-        tasks_from: create_develop_user.yaml
+        tasks_from: create_config_user.yaml
       vars:
-        user: "{{ dev_user }}"
+        user: "{{ config_user }}"
         user_password: "{{ users[user].password }}"
