@@ -23,5 +23,4 @@
         name: ubuntu
         tasks_from: create_config_user.yaml
       vars:
-        user: "{{ config_user }}"
-        user_password: "{{ users[user].password }}"
+        user_password: "{{ users[config_user].password }}"
