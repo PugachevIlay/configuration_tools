@@ -18,9 +18,9 @@
       vars:
         user: "{{ ssh_user }}"
 
-    - name: Include user-setup role for {{ user }} user
+    - name: Include user-setup role for {{ config_user }} user
       include_role:
         name: ubuntu
         tasks_from: create_config_user.yaml
       vars:
-        user_password: "{{ users[user].password }}"
+        user_password: "{{ users[config_user].password }}"
