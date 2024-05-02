@@ -13,11 +13,11 @@
       include_vars:
         file: ~/ansible/vault/users/cfg_users.yaml
 
-    - name: Add ssh-key and disable password auth for {{ ssh_user }}
-      include_role:
-        name: ubuntu
-      vars:
-        user: "{{ ssh_user }}"
+    #    - name: Add ssh-key and disable password auth for {{ ssh_user }}
+    #      include_role:
+    #        name: ubuntu
+    #      vars:
+    #        user: "{{ ssh_user }}"
 
 
     - name: Include user-setup role for {{ config_user }} user
