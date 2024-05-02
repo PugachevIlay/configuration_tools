@@ -2,8 +2,8 @@
   become: yes
   vars:
     ssh_user: root
-    config_user: ansible
-    dev_user: developer
+    config_user: ubuntu
+  #    dev_user: developer
 
   remote_user: "{{ ssh_user }}"
 

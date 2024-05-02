@@ -13,7 +13,7 @@ Create a `.txt` file to store your password, for example, `~/.config/default/vau
 variable <span style="color: #FF4500;">But please! Do not push this file to your repository! </span>:
 
 ```commandline
-export ANSIBLE_VAULT_PASSWORD_FILE=~/.config/default/vault-pass.txt
+export ANSIBLE_VAULT_PASSWORD_FILE=~/.config/default/local_vault_cred.txt
 ```
 
 You can verify the variable's value with:
